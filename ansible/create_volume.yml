@@ -1,0 +1,47 @@
+#!/usr/bin/env ansible-playbook
+
+################################################################################
+#
+# Title:        26_create_cifsvol_pri_svm.yml
+# Author:       Vish Hulikal
+# Date:         2020-06-20
+# Description:  Create volume on primary SVM for NAS
+#               with Ansible modules
+#
+# Modules:      na_ontap_volume
+#
+# URLs:         http://docs.netapp.com/ontap-9/index.jsp
+#               https://galaxy.ansible.com/netapp/ontap
+#
+# Built-in help:
+# ansible-doc netapp.ontap.na_ontap_volume
+#
+################################################################################
+
+- hosts: localhost
+  gather_facts: false
+  collections:
+    - netapp.ontap
+
+  tasks:
+  - name: Create volume on primary SVM
+    na_ontap_volume:
+      state:                 present
+      name:                  "nas_svm_cifs_01"
+      vserver:               "nas_svm"
+      size:                  "20"
+      size_unit:             mb
+      aggregate_name:        "aggr1_cluster1_01_data"
+      comment:               Created with Ansible
+      space_guarantee:       volume
+      policy:                default
+      junction_path:         "/nas_svm_cifs_01"
+      volume_security_style: ntfs
+      hostname:       "192.168.0.101"
+      username:       "admin"
+      password:       "Netapp1!"
+      https:          true
+      validate_certs: false
+      use_rest:       Always 
+      
+
